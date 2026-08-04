@@ -25,7 +25,7 @@ S1 = (A + B) / 2;         % COM of link AB (binary)
 S2 = (B + C) / 2;         % COM of link BC (binary)
 S3 = (D + C + E) / 2;     % COM of link DCE (ternary)
 S4 = (E + F) / 2;         % COM of link EF (binary)
-S5 = (H + G) / 2;         % COM of link FG (binary)
+S5 = (H + F + G) / 2;     % COM of link FG (binary)
                           % Link FG extends beyond F, so assume total
                           % length goes do H
  
