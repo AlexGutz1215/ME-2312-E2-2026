@@ -23,11 +23,13 @@ H = F + 1.843 * Vector_FG;
 % Define center of mass for each link
 S1 = (A + B) / 2;         % COM of link AB (binary)
 S2 = (B + C) / 2;         % COM of link BC (binary)
-S3 = (D + C + E) / 2;     % COM of link DCE (ternary)
+S3 = (D + C + E) / 2;     % COM of link DCE (Single link DCE)
+                          % Link DCE has C in the middle, so assume total
+                          % length goes do D to E
 S4 = (E + F) / 2;         % COM of link EF (binary)
-S5 = (H + F + G) / 2;     % COM of link FG (binary)
+S5 = (H + F + G) / 2;     % COM of link FG (Single link GFH)
                           % Link FG extends beyond F, so assume total
-                          % length goes do H
+                          % length goes from G to H
  
 % Static equilibrium equations using symbolic method
 syms FAx FAy FBx FBy FCx FCy FDx FDy FEx FEy FFx FFy FGx FGy Tin
