@@ -81,11 +81,14 @@ eqns = [eqn1; eqn2; eqn3; eqn4; eqn5; eqn6; eqn7; eqn8; eqn9; eqn10];
 solution = solve(eqns, [FAx, FAy, FBx, FBy, FCx, FCy, FDx, FDy, FEx, FEy, FFx, FFy, FGx, FGy, Tin]);
 
 % Extracting the numerical values from the solution
-FA = [solution.FAx, solution.FAy, 0];
+FA = double([solution.FAx, solution.FAy, 0]);
 FB = [solution.FBx, solution.FBy, 0];
 FC = [solution.FCx, solution.FCy, 0];
 FD = [solution.FDx, solution.FDy, 0];
 FE = [solution.FEx, solution.FEy, 0];
 FF = [solution.FFx, solution.FFy, 0];
 FG = [solution.FGx, solution.FGy, 0];
-Tin = solution.Tin;
+StaticTorque = double(solution.Tin);
+
+% Print functions'
+disp(['Static Torque: ' num2str(StaticTorque)]);
