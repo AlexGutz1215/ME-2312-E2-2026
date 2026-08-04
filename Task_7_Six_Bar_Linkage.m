@@ -74,7 +74,7 @@ eqn8 = cross(E-S4, -FE) + cross(F-S4, FF) == 0;
 % Link FG
 Weight_FG = [0 -Mass_FG*9.81 0];
 eqn9 = -FF + FG + Force_Input + Weight_FG ==0;
-eqn10 = cross(F-S4, -FF) + cross(G-S5, FG) == 0;
+eqn10 = cross(F-S5, -FF) + cross(G-S5, FG) == 0;
 
 % Solving Equations
 eqns = [eqn1; eqn2; eqn3; eqn4; eqn5; eqn6; eqn7; eqn8; eqn9; eqn10];
