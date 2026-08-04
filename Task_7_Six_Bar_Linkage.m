@@ -13,5 +13,14 @@ F = [43 32 0];
 G = [45 17 0];
 
 % Define center of mass
-S1 = (A+B)/2;
-S2 = (B+C+E)/2;
+S1 = (A+B)/2; % COM of link AB
+S2 = (B+C+E)/2; % COM of link BCE
+S3 = (C+D)/2; % COM of link CD
+S4 = (E+F)/2; % COM of link EF
+S5 = (F+G)/2; % COM of link FG
+
+% Static equilibrium equations using symbolic method
+
+syms FAx FAy FBx FBy FCx FCy FDx FDy FEx FEy FFx FFy FGx FGy Tin
+
+% Define force vectors
