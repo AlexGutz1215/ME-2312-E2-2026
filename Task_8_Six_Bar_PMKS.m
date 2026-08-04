@@ -17,15 +17,17 @@ G = [0.05 0.2 0];
 
 % Location of artifact H: on link FG, 1.843 m from F, extended beyond F
 % (away from G, matching the mount shown above F in the figure)
-dirFG = (F - G) / norm(F - G);   % unit vector pointing from G toward F
-H = F + 1.843 * dirFG;
+Vector_FG = (F - G) / norm(F - G);   % unit vector pointing from G toward F
+H = F + 1.843 * Vector_FG;
  
 % Define center of mass for each link
 S1 = (A + B) / 2;         % COM of link AB (binary)
 S2 = (B + C) / 2;         % COM of link BC (binary)
 S3 = (D + C + E) / 2;     % COM of link DCE (ternary)
 S4 = (E + F) / 2;         % COM of link EF (binary)
-S5 = (F + G) / 2;         % COM of link FG (binary)
+S5 = (H + G) / 2;         % COM of link FG (binary)
+                          % Link FG extends beyond F, so assume total
+                          % length goes do H
  
 % Static equilibrium equations using symbolic method
 syms FAx FAy FBx FBy FCx FCy FDx FDy FEx FEy FFx FFy FGx FGy Tin
