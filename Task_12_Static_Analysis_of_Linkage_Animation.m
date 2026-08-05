@@ -62,3 +62,8 @@ hTrajF = animatedline('Color', 'm', 'LineStyle', ':', 'LineWidth', 1.5);
 legend({'A', 'D', 'G', 'AB', 'BC', 'CD', 'BE', 'CE', 'EF', 'FG', 'B', 'C', 'E', 'F'}, 'Location', 'bestoutside');
 
 % Set axis limits with margin
+allx = [A(1), D(1), G(1), originalB(1), originalC(1), originalE(1), originalF(1)];
+ally = [A(2), D(2), G(2), originalB(2), originalC(2), originalE(2), originalF(2)];
+xmin = min(allx(:)) - 15; xmax = max(allx(:)) + 15;
+ymin = min(ally(:)) - 15; ymax = max(ally(:)) + 15;
+axis([xmin xmax ymin ymax]);
