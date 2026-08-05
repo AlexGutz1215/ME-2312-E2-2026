@@ -54,3 +54,11 @@ hE = plot(originalE(1), originalE(2), 'go', 'MarkerFaceColor', 'g');
 hF = plot(originalF(1), originalF(2), 'mo', 'MarkerFaceColor', 'm');
 
 % Trajectory
+hTrajB = animatedline('Color', 'b', 'LineStyle', '-', 'LineWidth', 1.5);
+hTrajC = animatedline('Color', 'r', 'LineStyle', '-', 'LineWidth', 1.5);
+hTrajE = animatedline('Color', 'g', 'LineStyle', '--', 'LineWidth', 1.5);
+hTrajF = animatedline('Color', 'm', 'LineStyle', ':', 'LineWidth', 1.5);
+
+legend({'A', 'D', 'G', 'AB', 'BC', 'CD', 'BE', 'CE', 'EF', 'FG', 'B', 'C', 'E', 'F'}, 'Location', 'bestoutside');
+
+% Set axis limits with margin
