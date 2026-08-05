@@ -1,0 +1,47 @@
+% Circle Intersection - CoPilot Assis
+
+clc
+clear
+% Joint coordinates
+A = [7 4 0];
+B = [5 16 0];
+C = [25 25 0];
+D = [23 10 0];
+E = [18 34 0];
+F = [43 32 0];
+G = [45 17 0];
+
+% Saving original values
+originalB=B;
+originalC=C;
+originalE=E;
+originalF=F;
+
+% Length of each link or important links
+AB = norm(A-B);
+BC = norm(B-C);
+CD = norm(C-D);
+BE = norm(B-E);
+
+n = length(new_B_joint_x);
+if n==0
+    error('No trajectory data to animate.');
+end
+
+figure('Name', 'Linkage Animation');
+axis equal
+hold on
+grid on
+xlabel('X'); ylabel('Y');
+% Plot fixed ground points
+plot(A(1), A(2), 'rs', 'MarkerFaceColor', 'r', 'DisplayName', 'A');
+plot(D(1), D(2), 'ks', 'MarkerFaceColor', 'k', 'DisplayName', 'D');
+plot(G(1), G(2), 'ms', 'MarkerFaceColor', 'm', 'DisplayName', 'G');
+
+% Initial link lines (handles)
+hAB = plot([A(1) originalB(1)], [A(2) originalB(2)], '-b', 'LineWidth', 2);
+hBC = plot([originalB(1) originalC(1)], [originalB(2) originalC(2)], '-c', 'LineWidth', 2);
+hCD = plot([originalB(1) D(1)], [originalC(2) D(2)], '-k', 'LineWidth', 2);
+hBC = plot([originalB(1) originalC(1)], [originalB(2) originalC(2)], '--g', 'LineWidth', 2);
+hCE = plot([originalB(1) originalC(1)], [originalB(2) originalC(2)], '--k', 'LineWidth', 2);
+hEF = plot([originalB(1) originalC(1)], [originalB(2) originalC(2)], '--m', 'LineWidth', 2);
