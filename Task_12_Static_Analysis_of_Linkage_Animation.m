@@ -1,4 +1,4 @@
-% Circle Intersection - CoPilot Assis
+% Circle Intersection - CoPilot Assist
 
 clc
 clear
@@ -22,21 +22,6 @@ AB = norm(A-B);
 BC = norm(B-C);
 CD = norm(C-D);
 BE = norm(B-E);
-
-n = length(new_B_joint_x);
-if n==0
-    error('No trajectory data to animate.');
-end
-
-figure('Name', 'Linkage Animation');
-axis equal
-hold on
-grid on
-xlabel('X'); ylabel('Y');
-% Plot fixed ground points
-plot(A(1), A(2), 'rs', 'MarkerFaceColor', 'r', 'DisplayName', 'A');
-plot(D(1), D(2), 'ks', 'MarkerFaceColor', 'k', 'DisplayName', 'D');
-plot(G(1), G(2), 'ms', 'MarkerFaceColor', 'm', 'DisplayName', 'G');
 
 % Initial link lines (handles)
 hAB = plot([A(1) originalB(1)], [A(2) originalB(2)], '-b', 'LineWidth', 2);
@@ -67,3 +52,31 @@ ally = [A(2), D(2), G(2), originalB(2), originalC(2), originalE(2), originalF(2)
 xmin = min(allx(:)) - 15; xmax = max(allx(:)) + 15;
 ymin = min(ally(:)) - 15; ymax = max(ally(:)) + 15;
 axis([xmin xmax ymin ymax]);
+
+% Animate
+frameDelay = 0.02;
+for k = 1:n+1
+    % Update Links
+    set(hAB, 'XData', [A(1) new_B_joint_x(k)], 'YData', [A(2) new_B_joint_y(k)]);
+    set(hBC, 'XData', [new_B_joint_x(k) new_C_joint_x(k)], 'YData', [new_B_joint_y(k) new_C_joint_y(k)]);
+    set(hCD, 'XData', [new_C_joint_x(k) D(1)], 'YData', [new_B_joint_y(k) D(2)]);
+    set(hBE, 'XData', [new_B_joint_x(k) new_E_joint_x(k)], 'YData', [new_B_joint_y(k) new_E_joint_y(k)]);
+    set(hCE, 'XData', [new_C_joint_x(k) new_E_joint_x(k)], 'YData', [new_C_joint_y(k) new_E_joint_y(k)]);
+    set(hEF, 'XData', [new_E_joint_x(k) new_F_joint_x(k)], 'YData', [new_E_joint_y(k) new_F_joint_y(k)]);
+    set(hFG, 'XData', [new_F_joint_x(k) G(1)], 'YData', [new_F_joint_y(k) G(2)]);
+
+    % Update joint markers
+    set(hB, 'XData', new_B_joint_x(k), 'YData', new_B_joint_y(k));
+    set(hC, 'XData', new_C_joint_x(k), 'YData', new_C_joint_y(k));
+    set(hE, 'XData', new_E_joint_x(k), 'YData', new_E_joint_y(k));
+    set(hF, 'XData', new_F_joint_x(k), 'YData', new_F_joint_y(k));
+
+    % Trajectory
+    addpoints(hTrajB, new_B_joint_x(k), new_B_joint_y(k));
+    addpoints(hTrajC, new_C_joint_x(k), new_C_joint_y(k));
+    addpoints(hTrajE, new_E_joint_x(k), new_E_joint_y(k));
+    addpoints(hTrajF, new_F_joint_x(k), new_F_joint_y(k));
+
+    drawnow;
+    pause(frameDelay);
+end
