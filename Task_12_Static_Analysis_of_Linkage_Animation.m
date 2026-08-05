@@ -37,3 +37,20 @@ xlabel('X'); ylabel('Y');
 plot(A(1), A(2), 'rs', 'MarkerFaceColor', 'r', 'DisplayName', 'A');
 plot(D(1), D(2), 'ks', 'MarkerFaceColor', 'k', 'DisplayName', 'D');
 plot(G(1), G(2), 'ms', 'MarkerFaceColor', 'm', 'DisplayName', 'G');
+
+% Initial link lines (handles)
+hAB = plot([A(1) originalB(1)], [A(2) originalB(2)], '-b', 'LineWidth', 2);
+hBC = plot([originalB(1) originalC(1)], [originalB(2) originalC(2)], '-c', 'LineWidth', 2);
+hCD = plot([originalB(1) D(1)], [originalC(2) D(2)], '-k', 'LineWidth', 2);
+hBE = plot([originalB(1) originalE(1)], [originalB(2) originalE(2)], '--g', 'LineWidth', 2);
+hCE = plot([originalC(1) originalE(1)], [originalC(2) originalE(2)], '--k', 'LineWidth', 2);
+hEF = plot([originalE(1) originalF(1)], [originalE(2) originalF(2)], '--m', 'LineWidth', 2);
+hFG = plot([originalF(1) G(1)], [originalF(2) G(2)], ':', 'Color', [0.5 0 0.5], 'LineWidth', 2);
+
+% Joint markers
+hB = plot(originalB(1), originalB(2), 'bo', 'MarkerFaceColor', 'b');
+hC = plot(originalC(1), originalC(2), 'ro', 'MarkerFaceColor', 'r');
+hE = plot(originalE(1), originalE(2), 'go', 'MarkerFaceColor', 'g');
+hF = plot(originalF(1), originalF(2), 'mo', 'MarkerFaceColor', 'm');
+
+% Trajectory
