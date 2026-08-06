@@ -55,6 +55,9 @@ new_F_joint_y(1) = F(2);
 
 % For-loop
 for theta = 1:1:360
+
+    theta
+
     B_new = A + [AB * cos(initial_angle_AB + deg2rad(theta)) AB * sin(initial_angle_AB + deg2rad(theta)) 0];
 
     new_B_joint_x(theta + 1) = B_new(1);
@@ -75,7 +78,7 @@ for theta = 1:1:360
     % What if there are no intersection points
 
     % Check if intersection points exist
-    if isempty(intersectionPoints)
+    if ~isempty(intersectionPoints)
         C_new_1 = double([intersectionPoints.x(1), intersectionPoints.y(1), 0]);
         C_new_2 = double([intersectionPoints.x(2), intersectionPoints.y(2), 0]);
 
@@ -89,74 +92,81 @@ for theta = 1:1:360
         end
         new_C_joint_x(theta + 1) = C_new(1);
         new_C_joint_y(theta + 1) = C_new(2);
-    else
-        fprintf('New Position cannot be determined at angle: %d degree fron the intial position', theta);
-    end
 
-    % Compute the new position of joint E
-    % Circle with New B as center and BE as radius and
-    % Circle with New C as center and CE as radius
-    % Compute the intersection points for joint E
-    eq3 = (x - B_new(1))^2 + (y - B_new(2))^2 == BE^2;
-    eq4 = (x - C_new(1))^2 + (y - C_new(2))^2 == CE^2;
+        % New positions of subsequent joints are calculated only if valid C
+        % is obtained
 
-    % Solve the system of equations for E
-    intersectionPointsE = solve([eq3, eq4], [x, y]);
+        % Compute the new position of joint E
+        % Circle with New B as center and BE as radius and
+        % Circle with New C as center and CE as radius
+        % Compute the intersection points for joint E
+        eq3 = (x - B_new(1))^2 + (y - B_new(2))^2 == BE^2;
+        eq4 = (x - C_new(1))^2 + (y - C_new(2))^2 == CE^2;
 
-    % Check if intersection points exist for E
-    if ~isempty(intersectionPointsE)
-        E_new_1 = double([intersectionPointsE.x(1), intersectionPointsE.y(1), 0]);
-        E_new_2 = double([intersectionPointsE.x(2), intersectionPointsE.y(2), 0]);
+        % Solve the system of equations for E
+        intersectionPointsE = solve([eq3, eq4], [x, y]);
 
-        dist_E1 = norm(E_new_1 - E);
-        dist_E2 = norm(E_new_2 - E);
+        % Check if intersection points exist for E
+        if ~isempty(intersectionPointsE)
+            E_new_1 = double([intersectionPointsE.x(1), intersectionPointsE.y(1), 0]);
+            E_new_2 = double([intersectionPointsE.x(2), intersectionPointsE.y(2), 0]);
 
-        if dist_E1 < dist_E2
-            E_new = E_new_1;
+            dist_E1 = norm(E_new_1 - E);
+            dist_E2 = norm(E_new_2 - E);
+
+            if dist_E1 < dist_E2
+                E_new = E_new_1;
+            else
+                E_new = E_new_2;
+            end
+
+            new_E_joint_x(theta + 1) = E_new(1);
+            new_E_joint_y(theta + 1) = E_new(2);
+
+            % New position of F only if valid E is obtained
+            % New position of joint F
+            % Compute the intersection points for joint F
+            eq5 = (x - E_new(1))^2 + (y - E_new(2))^2 == EF^2;
+            eq6 = (x - F(1))^2 + (y - F(2))^2 == FG^2;
+
+            % Solve the system of equations for F
+            intersectionPointsF = solve([eq5, eq6], [x, y]);
+
+            % Check if intersection points exist for F
+            if ~isempty(intersectionPointsF)
+                F_new_1 = double([intersectionPointsF.x(1), intersectionPointsF.y(1), 0]);
+                F_new_2 = double([intersectionPointsF.x(2), intersectionPointsF.y(2), 0]);
+
+                dist_F1 = norm(F_new_1 - F);
+                dist_F2 = norm(F_new_2 - F);
+
+                if dist_F1 < dist_F2
+                    F_new = F_new_1;
+                else
+                    F_new = F_new_2;
+                end
+
+                new_F_joint_x(theta + 1) = F_new(1);
+                new_F_joint_y(theta + 1) = F_new(2);
+            else
+                fprintf('New Position for F cannot be determined at angle: %d degree from the initial position\n', theta);
+            end
+
+            % Computed new positions of B, C, E, F
+            B = B_new;
+            C = C_new;
+            E = E_new;
+            F = F_new;
+
         else
-            E_new = E_new_2;
+            fprintf('New Position for E cannot be determined at angle: %d degree from the initial position\n', theta);
         end
 
-        new_E_joint_x(theta + 1) = E_new(1);
-        new_E_joint_y(theta + 1) = E_new(2);
+
     else
-        fprintf('New Position for E cannot be determined at angle: %d degree from the initial position\n', theta);
+        fprintf('New Position for C cannot be determined at angle: %d degree fron the intial position', theta);
     end
-
-    % New position of joint F
-    % Compute the intersection points for joint F
-    eq5 = (x - E_new(1))^2 + (y - E_new(2))^2 == EF^2;
-    eq6 = (x - F(1))^2 + (y - F(2))^2 == FG^2;
-
-    % Solve the system of equations for F
-    intersectionPointsF = solve([eq5, eq6], [x, y]);
-
-    % Check if intersection points exist for F
-    if ~isempty(intersectionPointsF)
-        F_new_1 = double([intersectionPointsF.x(1), intersectionPointsF.y(1), 0]);
-        F_new_2 = double([intersectionPointsF.x(2), intersectionPointsF.y(2), 0]);
-
-        dist_F1 = norm(F_new_1 - F);
-        dist_F2 = norm(F_new_2 - F);
-
-        if dist_F1 < dist_F2
-            F_new = F_new_1;
-        else
-            F_new = F_new_2;
-        end
-
-        new_F_joint_x(theta + 1) = F_new(1);
-        new_F_joint_y(theta + 1) = F_new(2);
-    else
-        fprintf('New Position for F cannot be determined at angle: %d degree from the initial position\n', theta);
-    end
-
-    % Computed new positions of B, C, E, F
-    B = B_new;
-    C = C_new;
-    E = E_new;
-    F = F_new;
-
+    
 end
 
 
@@ -181,3 +191,4 @@ plot(new_C_joint_x, new_C_joint_y, 'r-', 'LineWidth', 2, 'DisplayName', 'Traject
 plot(new_E_joint_x, new_E_joint_y, 'm-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point E');
 plot(new_F_joint_x, new_F_joint_y, 'c-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point F');
 legend show;
+grid on;
