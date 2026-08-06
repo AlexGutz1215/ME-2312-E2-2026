@@ -84,14 +84,20 @@ for theta = 1:1:360
     new_C_joint_x(theta + 1) = C_new(1);
     new_C_joint_y(theta + 1) = C_new(2);
 
-    % --- Joint E: intersection of circle(B_new, BE) and circle(C_new, CE) ---
-    [E_new, successE] = getNextJointPosition(B_new, BE, C_new, CE, E);
-    if ~successE
-        reportFailure('E', theta);
-        break;
-    end
-    new_E_joint_x(theta + 1) = E_new(1);
-    new_E_joint_y(theta + 1) = E_new(2);
+    % --- Joint E: Determine E by rotating rigid body CDE ---
+    vDC = C_new-D;
+    currentRigidAngle = atan2(vDC(2),vDC(1));
+    deltaTheta = currentRigidAngle-initialRigidAngle;
+
+    R = [cos(deltaTheta) -sin(deltaTheta);
+         sin(deltaTheta)  cos(deltaTheta)];
+
+    rotatedVector = R*vDE0(1:2)';
+
+    E_new = [D(1)+rotatedVector(1), D(2)+rotatedVector(2), 0];
+
+    new_E_joint_x(theta+1)=E_new(1);
+    new_E_joint_y(theta+1)=E_new(2);
 
     % --- Joint F: intersection of circle(E_new, EF) and circle(G, FG) ---
     [F_new, successF] = getNextJointPosition(E_new, EF, G, FG, F);
@@ -115,30 +121,40 @@ lastIdx = theta;
 
 new_B_joint_x = new_B_joint_x(1:lastIdx);
 new_B_joint_y = new_B_joint_y(1:lastIdx);
+
 new_C_joint_x = new_C_joint_x(1:lastIdx);
 new_C_joint_y = new_C_joint_y(1:lastIdx);
+
 new_E_joint_x = new_E_joint_x(1:lastIdx);
 new_E_joint_y = new_E_joint_y(1:lastIdx);
+
 new_F_joint_x = new_F_joint_x(1:lastIdx);
 new_F_joint_y = new_F_joint_y(1:lastIdx);
 
 % Plot the trajectories
-figure;
-plot(new_B_joint_x, new_B_joint_y, 'b-', 'LineWidth', 2);
-hold on;
-plot(A(1), A(2), 'ro', 'MarkerSize', 8, 'DisplayName', 'Point A');
-plot(new_B_joint_x(1), new_B_joint_y(2), 'go', 'MarkerSize', 8, 'DisplayName', 'Original Point B');
-xlabel('X Coordinate');
-ylabel('Y Coordinate');
-title('Trajectory of all Joints');
-legend show;
-grid on;
+figure
 
+plot(new_B_joint_x, new_B_joint_y, 'b-', 'LineWidth', 2);
+hold on
 plot(new_C_joint_x, new_C_joint_y, 'r-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point C');
 plot(new_E_joint_x, new_E_joint_y, 'm-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point E');
 plot(new_F_joint_x, new_F_joint_y, 'c-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point F');
-legend show;
+
+plot(A(1), A(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point A');
+plot(D(1), D(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point D');
+plot(G(1), G(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point G');
+
+plot(new_B_joint_x(1), new_B_joint_y(2), 'go', 'MarkerSize', 8, 'DisplayName', 'Original Point B');
+
+xlabel('X (m)');
+ylabel('Y (m)');
+
+title('Six-Bar Linkage Joint Trajectories');
+
+legend('B','C','E','F','Ground Joints');
+
 grid on;
+axis equal;
 
 % ======================= Local Functions =======================
 
