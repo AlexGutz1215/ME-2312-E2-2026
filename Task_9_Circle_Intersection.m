@@ -21,3 +21,14 @@ EF = norm(E-F);
 FG = norm(F-G);
 
 % Compute the initial angle of link AB, input link
+initial_angle_AB = atan2(B(2)-A(2),B(1)-A(1));
+
+% If this angle is negative, add / subtract 2 * pi
+if (initial_angle_AB < 0)
+    initial_angle_AB = initial_angle_AB + (2 * pi);
+end
+
+% For-loop
+for theta = 1:1:360
+    B_new = A + [AB * cos(initial_angle_AB + deg2rad(theta)) AB * sin(initial_angle_AB + deg2rad(theta)) 0];
+end
