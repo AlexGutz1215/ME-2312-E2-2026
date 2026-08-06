@@ -132,17 +132,17 @@ new_F_joint_x = new_F_joint_x(1:lastIdx);
 new_F_joint_y = new_F_joint_y(1:lastIdx);
 
 % Plot the trajectories
-figure
+figure;
 
-plot(new_B_joint_x, new_B_joint_y, 'b-', 'LineWidth', 2);
-hold on
+plot(new_B_joint_x, new_B_joint_y, 'b-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point B');
+hold on;
 plot(new_C_joint_x, new_C_joint_y, 'r-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point C');
 plot(new_E_joint_x, new_E_joint_y, 'm-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point E');
 plot(new_F_joint_x, new_F_joint_y, 'c-', 'LineWidth', 2, 'DisplayName', 'Trajectory of Point F');
 
-plot(A(1), A(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point A');
-plot(D(1), D(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point D');
-plot(G(1), G(2), 'ko','MarkerFaceColor', 'k', 'DisplayName', 'Point G');
+plot(A(1), A(2), 'ko','MarkerFaceColor', 'k', 'MarkerSize', 8, 'DisplayName', 'Ground pivot A');
+plot(D(1), D(2), 'k^','MarkerFaceColor', 'k', 'MarkerSize', 8, 'DisplayName', 'Ground pivot D');
+plot(G(1), G(2), 'ks','MarkerFaceColor', 'k', 'MarkerSize', 8, 'DisplayName', 'Ground pivot G');
 
 plot(new_B_joint_x(1), new_B_joint_y(2), 'go', 'MarkerSize', 8, 'DisplayName', 'Original Point B');
 
@@ -151,7 +151,7 @@ ylabel('Y (m)');
 
 title('Six-Bar Linkage Joint Trajectories');
 
-legend('B','C','E','F','Ground Joints');
+legend('B','C','E','F','A', 'D', 'G');
 
 grid on;
 axis equal;
