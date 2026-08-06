@@ -31,7 +31,7 @@ FG = norm(F-G);
 FH = 1.843; % Distance from F to point H
 
 % Define initial payload value at H (Artifact force)
-Payload = 0;
+Payload = 100;
 
 % Compute the initial angle of link AB, input link
 initial_angle_AB = atan2(B(2)-A(2), B(1)-A(1));
