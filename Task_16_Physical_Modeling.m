@@ -43,4 +43,6 @@ title('Velocity x''(t)'); grid on;
 subplot(2, 2, 3);
 fplot(solutionA, [0 10], 'LineWidth', 1.5)
 xlabel('Time (s)'); ylabel('Acceleration (m/s^2)');
-title('Velocity x''(t)'); grid on;
+title('Acceleration x''''(t)'); grid on;
+
+sgtitle('Automobile Bumper Response');
