@@ -114,6 +114,8 @@ new_E_joint_x = new_E_joint_x(1:lastIdx);
 new_E_joint_y = new_E_joint_y(1:lastIdx);
 new_F_joint_x = new_F_joint_x(1:lastIdx);
 new_F_joint_y = new_F_joint_y(1:lastIdx);
+
+rmseVal = comparing_PMKS_MATLAB(new_C_joint_x, new_C_joint_y, D(1), D(2));
  
 % Plot the trajectories
 figure;
@@ -222,7 +224,7 @@ function reportFailure(jointName, theta)
         jointName, theta);
 end
 
-function forces = staticAnalysis(A, B, C, D, E, F, G);
+function forces = staticAnalysis(A, B, C, D, E, F, G)
 % Forces are not passes and so are masses
 % Define center of mass
 S1 = (A+B)/2; % COM of link AB
@@ -304,5 +306,49 @@ FG = [solution.FGx, solution.FGy, 0];
 StaticTorque = double(solution.Tin);
 
 forces = [FA; FB; FC; FD; FE; FF; FG; [0 0 StaticTorque]];
+
+end
+
+function rmse = comparing_PMKS_MATLAB(cx, cy, dx, dy)
+
+
+%% Set up the Import Options and import the data
+opts = spreadsheetImportOptions("NumVariables", 15);
+
+% Specify sheet and range
+opts.Sheet = "Sheet1";
+opts.DataRange = "A2:O646";
+
+% Specify column names and types
+opts.VariableNames = ["Angle", "JointAXCm", "JointAYCm", "JointBXCm", "JointBYCm", "JointCXCm", "JointCYCm", "JointDXCm", "JointDYCm", "JointEXCm", "JointEYCm", "JointFXCm", "JointFYCm", "JointGXCm", "JointGYCm"];
+opts.VariableTypes = ["double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double", "double"];
+
+% Import the data
+kinematics_loops7Joints6Links06_Aug20_20_57 = readtable("C:\Users\adgut\Downloads\kinematics_loops7Joints6Links06-Aug 20_20_57.xlsx", opts, "UseExcel", false);
+
+
+%% Clear temporary variables
+clear opts
+
+% Storing values into arrays
+pmks_x1 = kinematics_loops7Joints6Links06_Aug20_20_57.JointCXCm;
+pmks_y1 = kinematics_loops7Joints6Links06_Aug20_20_57.JointCYCm;
+
+pmks_x2 = kinematics_loops7Joints6Links06_Aug20_20_57.JointDXCm;
+pmks_y2 = kinematics_loops7Joints6Links06_Aug20_20_57.JointDYCm;
+
+% Calculating distances for PMKS+ data and then for MATLAB data
+distance_PMKS = zeros(1, 42);
+distance_MATLAB = zeros(1, 42);
+
+for theta = 1:1:42
+    distance_PMKS(theta) = norm([pmks_x1(theta) pmks_y1(theta) 0] - [pmks_x2(theta) pmks_y2(theta) 0]);
+    distance_MATLAB(theta) = norm([cx(theta) cy(theta) 0] - [dx dy 0]);
+end
+
+rsmeVal = rsme(distance_PMKS, distance_MATLAB);
+
+% Compute RMSE between the two datasets
+rmse = sqrt(mean((dist_PMKS - dist_MATLAB).^2));
 
 end
